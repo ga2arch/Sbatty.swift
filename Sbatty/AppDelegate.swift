@@ -89,12 +89,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func microseconds(unit: Character) -> Int {
         switch unit {
-        case "s":
-            return 1  * 10 ** 6
-        case "m":
-            return 6  * 10 ** 7
-        case "h":
-            return 36 * 10 ** 8
+        case "s": return 1  * 10 ** 6
+        case "m": return 6  * 10 ** 7
+        case "h": return 36 * 10 ** 8
             
         default:
             return 1
