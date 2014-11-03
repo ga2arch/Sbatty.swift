@@ -9,12 +9,6 @@
 import Foundation
 import Cocoa
 
-infix operator ** {}
-
-func ** (num: Int, power: Int) -> Int {
-    return Int(pow(Double(num), Double(power)))
-}
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -26,12 +20,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         var args = NSProcessInfo.processInfo().arguments as [String]
         if args.count == 3 && args[1] == "in" {
-            makePls(&args[2])
+            let pls = makePls(&args[2])
+            startSbatty(pls)
             
         } else if args.count == 2 {
             
             let delay = args[1]
-            usleep(UInt32(delay.toInt()!))
+            sleep(UInt32(delay.toInt()!))
             
             displayNotification("Sbatty",
                 message: "A man's gotta do what a man's gotta do")
@@ -63,14 +58,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         notcenter.deliverNotification(notification)
     }
     
-    func makePls(inout arg: String) {
+    func startSbatty(pls: String) {
+        var shell: NSTask = NSTask()
+        shell.launchPath = "/bin/launchctl"
+        shell.arguments  = ["load", pls]
+        shell.launch()
+    }
+    
+    func makePls(inout arg: String) -> String {
         let unit = arg.removeAtIndex(advance(arg.endIndex, -1))
-        let time = arg.toInt()! * microseconds(unit)
+        let time = arg.toInt()! * seconds(unit)
         
         let exec = NSProcessInfo.processInfo().arguments[0] as String
         
         let path = NSHomeDirectory()
-        let doc = path.stringByAppendingPathComponent(".reminder.plist")
+        let pls = path.stringByAppendingPathComponent(".reminder.plist")
         var dict: NSMutableDictionary = [
             "Label": "com.gabriele.sbatty",
             "ProgramArguments": [exec, String(time)],
@@ -79,19 +81,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             "RunAtLoad": true
         ]
         
-        dict.writeToFile(doc, atomically: true)
+        dict.writeToFile(pls, atomically: true)
         
-        var shell: NSTask = NSTask()
-        shell.launchPath = "/bin/launchctl"
-        shell.arguments  = ["load", doc]
-        shell.launch()
+        return pls
     }
 
-    func microseconds(unit: Character) -> Int {
+    func seconds(unit: Character) -> Int {
         switch unit {
-        case "s": return 1  * 10 ** 6
-        case "m": return 6  * 10 ** 7
-        case "h": return 36 * 10 ** 8
+        case "s": return 1
+        case "m": return 60
+        case "h": return 60 * 60
             
         default:
             return 1
