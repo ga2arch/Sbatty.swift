@@ -25,9 +25,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
         } else if args.count == 2 {
             
-            let delay = args[1]
-            sleep(UInt32(delay.toInt()!))
-            
             displayNotification("Sbatty",
                 message: "A man's gotta do what a man's gotta do")
             
@@ -75,10 +72,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let pls = path.stringByAppendingPathComponent(".reminder.plist")
         var dict: NSMutableDictionary = [
             "Label": "com.gabriele.sbatty",
-            "ProgramArguments": [exec, String(time)],
+            "ProgramArguments": [exec, "n"],
             "KeepAlive": false,
             "LaunchOnlyOnce": true,
-            "RunAtLoad": true
+            "RunAtLoad": false,
+            "StartInterval": time
         ]
         
         dict.writeToFile(pls, atomically: true)
