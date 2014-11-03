@@ -9,14 +9,20 @@
 import Foundation
 import Cocoa
 
+infix operator ** {}
+
+func ** (num: Int, power: Int) -> Int {
+    return Int(pow(Double(num), Double(power)))
+}
+
 func microseconds(unit: Character) -> Int {
     switch unit {
     case "s":
-        return 1  * Int(pow(Double(10), Double(6)))
+        return 1  * 10 ** 6
     case "m":
-        return 6  * Int(pow(Double(10), Double(7)))
+        return 6  * 10 ** 7
     case "h":
-        return 36 * Int(pow(Double(10), Double(8)))
+        return 36 * 10 ** 8
         
     default:
         return 1
@@ -50,7 +56,9 @@ func makePls(inout arg: String) -> () {
 func main(inout args: [String]) -> () {
     if args.count == 3 && args[1] == "in" {
         makePls(&args[2])
+        
     } else if args.count == 2 {
+        
         let delay = args[1]
         usleep(UInt32(delay.toInt()!))
         
