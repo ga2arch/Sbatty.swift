@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Sbatty.xcodeproj">
+      location = "self:Sbatty2.xcodeproj">
    </FileRef>
 </Workspace>
