@@ -4,30 +4,20 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Sbatty2.xcscheme</key>
+		<key>Sbatty.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>Test.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>E09916421A080F3600B9AC45</key>
+		<key>E0CB87281A08179700C1AC74</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E09916521A080F3700B9AC45</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E09916661A08146700B9AC45</key>
+		<key>E0CB87381A08179700C1AC74</key>
 		<dict>
 			<key>primary</key>
 			<true/>

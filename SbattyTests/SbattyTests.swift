@@ -1,6 +1,6 @@
 //
-//  Sbatty2Tests.swift
-//  Sbatty2Tests
+//  SbattyTests.swift
+//  SbattyTests
 //
 //  Created by Gabriele Carrettoni on 03/11/14.
 //  Copyright (c) 2014 Gabriele Carrettoni. All rights reserved.
@@ -9,7 +9,7 @@
 import Cocoa
 import XCTest
 
-class Sbatty2Tests: XCTestCase {
+class SbattyTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
