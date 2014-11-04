@@ -19,12 +19,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         notcenter = NSUserNotificationCenter.defaultUserNotificationCenter()
 
         var args = NSProcessInfo.processInfo().arguments as [String]
+        
         if args.count == 3 && args[1] == "in" {
             let pls = makePls(&args[2])
             startSbatty(pls)
-            
-        } else if args.count == 2 {
-            
+        }
+        else if args.count == 2 && args[1] == "help" {
+            println("Help: sbatty in <time><unit>")
+            println("Example: sbatty in 10s")
+        }
+        else  {
             displayNotification("Sbatty",
                 message: "A man's gotta do what a man's gotta do")
             
@@ -35,9 +39,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 usleep(300000)
                 sound?.stop()
             }
-        } else {
-            println("Help: sbatty in <time><unit>")
-            println("Example: sbatty in 10s")
         }
         
         NSApplication.sharedApplication().terminate(self)
@@ -72,7 +73,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let pls = path.stringByAppendingPathComponent(".reminder.plist")
         var dict: NSMutableDictionary = [
             "Label": "com.gabriele.sbatty",
-            "ProgramArguments": [exec, "n"],
+            "ProgramArguments": [exec],
             "KeepAlive": false,
             "LaunchOnlyOnce": true,
             "RunAtLoad": false,
