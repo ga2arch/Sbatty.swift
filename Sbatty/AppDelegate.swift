@@ -20,17 +20,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         var args = NSProcessInfo.processInfo().arguments as [String]
         
-        if args.count == 3 && args[1] == "in" {
-            let pls = makePls(&args[2])
+        if args.count == 4 && (args[1] == "in" || args[1] == "every") {
+            let pls = makePls(args[1], when: &args[2], message: args[3])
             startSbatty(pls)
         }
         else if args.count == 2 && args[1] == "help" {
             println("Help: sbatty in <time><unit>")
             println("Example: sbatty in 10s")
         }
-        else  {
-            displayNotification("Sbatty",
-                message: "A man's gotta do what a man's gotta do")
+        else  if args.count == 4 {
+            displayNotification("Sbatty", message: args[3])
             
             var sound = NSSound(named: "Ping")
             
@@ -38,6 +37,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 sound?.play()
                 usleep(300000)
                 sound?.stop()
+            }
+            
+            let delete = args[2] == "in" ? true : false
+            if delete {
+                let fm = NSFileManager.defaultManager()
+                
+                let path = NSHomeDirectory()
+                let alarms = path.stringByAppendingPathComponent(".alarms/")
+                let plsName = args[1]
+                
+                let pls = alarms.stringByAppendingPathComponent(plsName)
+                fm.removeItemAtPath(pls, error: nil)
             }
         }
         
@@ -63,21 +74,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         shell.launch()
     }
     
-    func makePls(inout arg: String) -> String {
-        let unit = arg.removeAtIndex(advance(arg.endIndex, -1))
-        let time = arg.toInt()! * seconds(unit)
+    func makePls(how: String, inout when: String, message: String) -> String {
+        let repetition = how == "every" ? false : true
+
+        let unit = when.removeAtIndex(advance(when.endIndex, -1))
+        let time = when.toInt()! * seconds(unit)
         
         let exec = NSProcessInfo.processInfo().arguments[0] as String
         
         let path = NSHomeDirectory()
-        let pls = path.stringByAppendingPathComponent(".reminder.plist")
+        let alarms = path.stringByAppendingPathComponent(".alarms/")
+        
+        let random = randomStringWithLength(10)
+        let plsName = ".reminder-\(random).plist"
+        
+        let pls = alarms.stringByAppendingPathComponent(plsName)
+        
         var dict: NSMutableDictionary = [
-            "Label": "com.gabriele.sbatty",
-            "ProgramArguments": [exec],
-            "KeepAlive": false,
-            "LaunchOnlyOnce": true,
+            "Label": "com.gabriele.sbatty-\(random)",
+            "ProgramArguments": [exec, plsName, how, message],
+            "LaunchOnlyOnce": repetition,
             "RunAtLoad": false,
-            "StartInterval": time
+            "StartInterval": time,
         ]
         
         dict.writeToFile(pls, atomically: true)
@@ -94,6 +112,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         default:
             return 1
         }
+    }
+    
+    func randomStringWithLength(len: Int) -> String {
+        let letters = Array("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+        var randomString: String = ""
+        
+        for i in 0...len {
+            let r = arc4random_uniform(UInt32(countElements(letters)))
+            let c = letters[Int(r)]
+            randomString.append(c)
+        }
+        
+        return randomString
     }
 
 }
