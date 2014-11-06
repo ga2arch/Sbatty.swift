@@ -39,8 +39,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 sound?.stop()
             }
             
-            let delete = args[2] == "in" ? true : false
-            if delete {
+            if args[2] == "in" {
                 let fm = NSFileManager.defaultManager()
                 
                 let path = NSHomeDirectory()
